@@ -1,0 +1,19 @@
+.App {
+  min-height: 100vh;
+}
+
+.page {
+  padding: 20px 0;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
