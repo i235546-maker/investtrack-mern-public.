@@ -76,7 +76,7 @@ router.delete('/:id', auth, async (req, res) => {
 router.get('/portfolio-summary', auth, async (req, res) => {
     try {
         const summary = await Investment.aggregate([
-            { $match: { userId: require('mongoose').Types.ObjectId(req.user.id) } },
+            { $match: { userId: new (require('mongoose').Types.ObjectId)(req.user.id) } },
             {
                 $group: {
                     _id: '$type',
