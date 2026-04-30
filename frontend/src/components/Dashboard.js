@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
@@ -11,16 +11,11 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const { token } = useContext(AuthContext);
 
-    const config = {
-        headers: { 'x-auth-token': token }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
+            const config = {
+                headers: { 'x-auth-token': token }
+            };
             const [invRes, sumRes] = await Promise.all([
                 api.get('/investments', config),
                 api.get('/investments/portfolio-summary', config)
@@ -31,11 +26,18 @@ const Dashboard = () => {
             console.log(err);
         }
         setLoading(false);
-    };
+    }, [token]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const deleteInv = async (id) => {
         if(!window.confirm('Delete this investment?')) return;
         try {
+            const config = {
+                headers: { 'x-auth-token': token }
+            };
             await api.delete(`/investments/${id}`, config);
             fetchData();
         } catch(err) {
